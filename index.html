@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шлях Гетьмана: 1648-1657</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>📜 Шлях Гетьмана</h1>
+        
+        <div id="stats-bar">
+            <div class="stat-item">📅 Рік: <span id="year-display">1648</span></div>
+            <div class="stat-item">🛡 Козацький дух: <span id="morale-display">100</span>%</div>
+            <div class="stat-item">👑 Авторитет: <span id="authority-display">0</span></div>
+        </div>
+
+        <div id="game-screen" class="fade-in">
+            <div id="image-placeholder" class="event-image">
+                <span id="scene-desc">Ілюстрація події</span>
+            </div>
+            <span id="year-badge" class="year-badge">1648 рік</span>
+            <div id="event-title" class="event-title">Початок повстання</div>
+            <div id="event-text" class="event-description">
+                Ви втікли на Січ. Польська шляхта тисне на українські землі. Потрібно зібрати військо, але сил замало. Що робитимете першочергово?
+            </div>
+            <div id="choices" class="choices-container">
+                </div>
+        </div>
+
+        <div id="game-over" class="fade-in">
+            <h2>💀 Поразка</h2>
+            <p id="death-reason">Ваше повстання придушено.</p>
+            <div class="rank-title">Ваш ранг: Втікач</div>
+            <button class="restart-btn" onclick="startGame()">Спробувати ще раз</button>
+        </div>
+
+        <div id="victory" class="fade-in">
+            <h2>🕊 Війна завершена (на цьому етапі)</h2>
+            <p>Ви пройшли складний шлях від 1648 до 1657 року. Історія запам'ятає ваші рішення.</p>
+            <div id="final-score"></div>
+            <div id="final-rank" class="rank-title"></div>
+            <button class="restart-btn" onclick="startGame()">Почати заново</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
