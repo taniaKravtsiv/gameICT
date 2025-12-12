@@ -4,8 +4,8 @@ const scenarios = [
         id: 1,
         year: 1648,
         title: "Пошук союзників",
+        image: "img/RadaNaSichi.jpg", // Переконайся, що такий файл є у папці img
         text: "Ви на Січі (Микитинська Січ). Королівська армія сильна, а у козаків немає кінноти. Потрібен союзник. До кого звернемося?",
-        sceneDesc: "Козацька рада на Січі. Хмельницький тримає булаву.",
         choices: [
             {
                 text: "Укласти союз із Кримським ханом Іслам-Гіреєм III",
@@ -37,8 +37,8 @@ const scenarios = [
         id: 2,
         year: 1648,
         title: "Битва під Жовтими Водами",
+        image: "img/YkripleniTabir.jpg",
         text: "Травень 1648. Авангард польського війська під керівництвом сина Потоцького наближається. Як діємо?",
-        sceneDesc: "Укріплений табір козаків посеред степу.",
         choices: [
             {
                 text: "Атакувати в лоб усіма силами",
@@ -62,8 +62,8 @@ const scenarios = [
         id: 3,
         year: 1648,
         title: "Битва під Корсунем",
+        image: "img/DorogaVlisi.jpg",
         text: "Основні сили поляків відступають через Горохову Діброву. Максим Кривоніс пропонує план.",
-        sceneDesc: "Вузька дорога в лісі, перекопана ровами.",
         choices: [
             {
                 text: "Дати їм піти, щоб не проливати зайвої крові",
@@ -87,8 +87,8 @@ const scenarios = [
         id: 4,
         year: 1649,
         title: "Зборівська битва та договір",
+        image: "img/NametHana.jpg",
         text: "Серпень 1649. Ми оточили короля Яна II Казимира. Перемога близька, але хан Іслам-Гірей III раптом вимагає припинити бій і підписати угоду.",
-        sceneDesc: "Намет хана. Напружені переговори.",
         choices: [
             {
                 text: "Проігнорувати хана і атакувати короля",
@@ -112,8 +112,8 @@ const scenarios = [
         id: 5,
         year: 1651,
         title: "Берестецька битва",
+        image: "img/Boloto.jpg",
         text: "Найбільша битва Європи. У вирішальний момент татари тікають з поля бою, захопивши вас у полон. Військо в оточенні. Хто врятує ситуацію?",
-        sceneDesc: "Болотиста місцевість, козацький табір в облозі.",
         choices: [
             {
                 text: "Ніхто, здаємося",
@@ -137,8 +137,8 @@ const scenarios = [
         id: 6,
         year: 1651,
         title: "Білоцерківський договір",
+        image: "img/Poxmyro.jpg",
         text: "Після поразки під Берестечком поляки наступають. Потрібен новий мир. Умови жорсткі: реєстр 20 тис., влада гетьмана лише в Київському воєводстві.",
-        sceneDesc: "Похмурий стіл переговорів у Білій Церкві.",
         choices: [
             {
                 text: "Підписати ганебний мир, щоб виграти час",
@@ -162,8 +162,8 @@ const scenarios = [
         id: 7,
         year: 1654,
         title: "Переяславська рада",
+        image: "img/Maidan.jpg",
         text: "Війна триває 6 років. Україна виснажена. Туреччина далеко, Польща ворог. Потрібен сильний протекторат. Ваше рішення?",
-        sceneDesc: "Майдан у Переяславі. Зібралася старшина.",
         choices: [
             {
                 text: "Військовий союз із Московським царством",
@@ -182,6 +182,31 @@ const scenarios = [
                 correct: false
             }
         ]
+    },
+    {
+        id: 8,
+        year: 1657,
+        title: "Смерть Гетьмана",
+        image: "img/Kotik.webp",
+        text: "Ви хворієте. Потрібно передати булаву. Кого ви бачите своїм наступником, щоб зберегти державу?",
+        choices: [
+            {
+                text: "Син Юрій Хмельницький",
+                resultText: "Він ще занадто молодий і слабкий. Почнеться Руїна.",
+                moraleChange: -20,
+                authorityChange: -10,
+                nextScenario: 100, // Фінал
+                correct: false
+            },
+            {
+                text: "Іван Виговський",
+                resultText: "Досвідчений політик, який спробує відірватися від Москви (Гадяцька унія).",
+                moraleChange: 10,
+                authorityChange: 20,
+                nextScenario: 100, // Фінал
+                correct: true
+            }
+        ]
     }
 ];
 
@@ -190,10 +215,10 @@ const scenarios = [
 let currentScenarioIndex = 0;
 let morale = 100;
 let authority = 0;
-let historyLog = [];
 
 const ui = {
     screen: document.getElementById('game-screen'),
+    gameImage: document.getElementById('game-image'), // <--- Додано посилання на картинку
     title: document.getElementById('event-title'),
     text: document.getElementById('event-text'),
     choices: document.getElementById('choices'),
@@ -201,7 +226,6 @@ const ui = {
     yearDisplay: document.getElementById('year-display'),
     moraleDisplay: document.getElementById('morale-display'),
     authorityDisplay: document.getElementById('authority-display'),
-    sceneDesc: document.getElementById('scene-desc'),
     gameOverScreen: document.getElementById('game-over'),
     victoryScreen: document.getElementById('victory'),
     deathReason: document.getElementById('death-reason'),
@@ -213,7 +237,6 @@ function startGame() {
     currentScenarioIndex = 0;
     morale = 100;
     authority = 0;
-    historyLog = [];
     
     ui.gameOverScreen.style.display = 'none';
     ui.victoryScreen.style.display = 'none';
@@ -238,17 +261,28 @@ function loadScenario(index) {
     }
 
     let scenario = null;
-    if (index === 0) {
-        scenario = scenarios[0]; 
-    } else {
-         scenario = scenarios[index];
+    // Шукаємо сценарій за індексом у масиві, або за ID, якщо структура складна.
+    // Тут у нас простий масив, тому беремо просто по порядку:
+    scenario = scenarios[index]; 
+    
+    // Якщо сценарій "фінальний" (id=100), завершуємо гру
+    if (!scenario) {
+        endGame(true);
+        return;
     }
 
     ui.title.innerText = scenario.title;
     ui.text.innerText = scenario.text;
     ui.yearBadge.innerText = scenario.year + " рік";
     ui.yearDisplay.innerText = scenario.year;
-    ui.sceneDesc.innerText = scenario.sceneDesc;
+    
+    // --- ОНОВЛЕННЯ КАРТИНКИ ---
+    if (scenario.image) {
+        ui.gameImage.src = scenario.image;
+        ui.gameImage.style.display = 'block'; // Показати, якщо була схована
+    } else {
+        ui.gameImage.style.display = 'none'; // Сховати, якщо картинки немає
+    }
 
     ui.choices.innerHTML = '';
 
@@ -277,6 +311,8 @@ function makeChoice(choice) {
 
     if (choice.nextScenario === -1) {
         endGame(false, choice.resultText);
+    } else if (choice.nextScenario === 100) {
+         endGame(true);
     } else {
         const nextIndex = scenarios.findIndex(s => s.id === choice.nextScenario);
         if (nextIndex !== -1) {
@@ -294,10 +330,10 @@ function endGame(isVictory, reason = "") {
     if (isVictory) {
         ui.victoryScreen.style.display = 'block';
         let rank = "Козак";
-        if (authority > 50) rank = "Сотник";
-        if (authority > 80) rank = "Полковник";
-        if (authority >= 100) rank = "Гетьман Всієї України";
-
+        if (authority > 30) rank = "Сотник";
+        if (authority > 60) rank = "Полковник";
+        if (authority >= 90) rank = "Гетьман Всієї України";
+        
         ui.finalScore.innerText = `Фінальний авторитет: ${authority}`;
         ui.finalRank.innerText = `Ваше звання: ${rank}`;
     } else {
@@ -306,4 +342,5 @@ function endGame(isVictory, reason = "") {
     }
 }
 
+// Запуск гри при завантаженні сторінки
 startGame();
