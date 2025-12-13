@@ -90,14 +90,16 @@ h1 {
 }
 
 .event-image {
-    width: 100%;
-    height: auto;       
-    max-height: 300px;  
-    object-fit: cover; 
-    border-radius: 4px;
-    border: 2px solid var(--ink-color);
-    margin-bottom: 20px;
-    display: block;
+    width: auto;              
+    max-width: 100%;          
+    height: auto;           
+    max-height: 350px;        
+    display: block;           
+    margin: 0 auto 20px auto; 
+    
+    border-radius: 5px;      
+    border: 3px double var(--ink-color); 
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3); 
 }
 
 /* Кнопки вибору */
